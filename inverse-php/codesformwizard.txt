@@ -1,0 +1,171 @@
+            <!-- Step 2 -->
+            <h6>Educational</h6>
+                                                <section>
+                                                    <div class="form-row">
+                                                        <div class="col-md-4">
+                                                          <label>School Name</label>
+                                                          <input type="text" class="form-control" id="">
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                          <label>Address</label>
+                                                          <input type="text" class="form-control" id="">
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                          <label>Degree</label>
+                                                          <select class="form-control">
+                                                              <option>Primary</option>
+                                                              <option>Secondary</option>
+                                                              <option>Associate's degree</option>
+                                                              <option>Bachelor's degree</option>
+                                                              <option>Master's degree</option>
+                                                              <option>Doctoral degree</option>
+                                                          </select>
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                          <label>Year Graduated</label>
+                                                          <input type="text" class="form-control" id="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <button class="btn btn-info float-right">Add</button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="table-responsive">
+                                                                <table id="example23"
+                                                                    class="font-weight-bold text-center display nowrap table table-hover table-striped table-bordered"
+                                                                    cellspacing="0" width="100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>School Name</th>
+                                                                            <th>Address</th>
+                                                                            <th>Degree</th>
+                                                                            <th>Year Graduated</th>
+                                                                            <th>Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <!-- Step 3 -->
+                                                <h6>Job Details</h6>
+                                                <section>
+                                                  <div class="form-row">
+                                                    <div class="form-group col-md-3">
+                                                        <label>Department</label>
+                                                        <select class="form-control">
+                                                            <option>IT Department</option>
+                                                            <option>HR Department</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label>Job Title</label>
+                                                        <select class="form-control">
+                                                            <option>IT Developer</option>
+                                                            <option>HR Admin</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                        <label>Employement Status</label>
+                                                        <select class="form-control">
+                                                            <option>Probitionary</option>
+                                                            <option>Regular</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-3">
+                                                          <label>Salary</label>
+                                                          <input type="text" class="form-control" id="">
+                                                    </div>
+                                                  </div>
+                                                  <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label>Date Started</label>
+                                                        <input type="date" class="form-control" id="">
+                                                  </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label>Time Shift</label>
+                                                        <select class="form-control">
+                                                            <option>7:00 AM - 4:00 PM</option>
+                                                            <option>8:00 AM - 5:00 PM</option>
+                                                            <option>8:30 AM - 5:30 PM</option>
+                                                            <option>9:00 AM - 6:00 PM</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label>Leave Count</label>
+                                                        <input type="text" class="form-control" id="">
+                                                    </div>
+                                                  </div>
+                                                  <div class="form-row">
+                                                    <div class="form-group col-md-4">
+                                                        <label>SSS/GSIS Contribution</label>
+                                                        <input type="text" class="form-control" id="">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label>Pag-ibig Contribution</label>
+                                                        <input type="text" class="form-control" id="">
+                                                    </div>
+                                                    <div class="form-group col-md-4">
+                                                        <label>Philhealth Contribution</label>
+                                                        <input type="text" class="form-control" id="">
+                                                    </div>
+                                                  </div>
+                                                </section>
+                                                <!-- Step 4 -->
+                                                <h6>Allowances / Recruitment Agency</h6>
+                                                <section>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="decisions1">Recruitment Agency</label>
+                                                                <select class="form-control">
+                                                                    <option>Recruiter 1</option>
+                                                                    <option>Recruiter 2</option>
+                                                                    <option>Recruiter 3</option>
+                                                                    <option>Recruiter 4</option>
+                                                                    <option>Recruiter 5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Allowances :</label>
+                                                                <div class="c-inputs-stacked">
+                                                                    <label class="inline custom-control custom-checkbox block">
+                                                                        <input type="checkbox" class="custom-control-input">
+                                                                        <span class="custom-control-label ml-0">Transportation Allowances</span>
+                                                                    </label>
+                                                                    <label class="inline custom-control custom-checkbox block">
+                                                                        <input type="checkbox" class="custom-control-input">
+                                                                        <span class="custom-control-label ml-0">Rice Allowances</span>
+                                                                    </label>
+                                                                    <label class="inline custom-control custom-checkbox block">
+                                                                        <input type="checkbox" class="custom-control-input">
+                                                                        <span class="custom-control-label ml-0">Meal Allowances</span>
+                                                                    </label>
+                                                                    <label class="inline custom-control custom-checkbox block">
+                                                                        <input type="checkbox" class="custom-control-input">
+                                                                        <span class="custom-control-label ml-0">Uniform and Clothing Allowances</span>
+                                                                    </label>
+                                                                    <label class="inline custom-control custom-checkbox block">
+                                                                        <input type="checkbox" class="custom-control-input">
+                                                                        <span class="custom-control-label ml-0">Medical Allowances</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
