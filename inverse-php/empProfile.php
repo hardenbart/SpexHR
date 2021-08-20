@@ -27,6 +27,7 @@ include('includes/navbar.php');
                 $nameofwife = $_POST['nameofwife'];
                 $occupationofwife = $_POST['occupationofwife'];
                 $fullname = $fname . $mname . $lname;
+                $fullnamedependant = $fname ." ". $mname ." ". $lname;
                 $uuid = $_POST['uuid'];
 
                 $filename = $fullname ."_". $uuid . "_" . $_FILES["uploadfile"]["name"];
@@ -34,15 +35,16 @@ include('includes/navbar.php');
                 $folder = "pictures/".$filename;
                 move_uploaded_file($tempname, $folder);
 
-                $dependantName =  trim($_POST['dependantName']);
-                $dependantBirthday = trim($_POST['dependantBirthday']);
+                $sql = "insert into employeee_dependant(uuid,employeeName,dependantName,dependantBirthday) values";
+                $rows=[];
+                for($i = 0; $i < count($_POST["txtName"]); $i++){
+                    $rows[]="('{$uuid}','{$fullnamedependant}',{$_POST["txtName"][$i]}','{$_POST["txtBirthday"][$i]}')";
+                }
+                $sql.=implode(",",$rows);
+                $con->query($sql);
 
                 $msg=mysqli_query($con,"insert into employee_pinfo(fname,mname,lname,position,birthday,birthplace,citizenship,sex,contactno,civilstatus,address,sssno,pagibigno,tinno,philhealthno,nameofhusband,occupationofhusband,nameofwife,occupationofwife,filename,uuid) 
                 values('$fname','$mname','$lname','$position','$birthday','$birthplace','$citizenship','$sex','$contactno','$civilstatus','$address','$sssno','$pagibigno','$tinno','$philhealthno','$nameofhusband','$occupationofhusband','$nameofwife','$occupationofwife','$filename','$uuid')");
-                
-                $msg2=mysqli_query($con,"insert into employeee_dependant(uuid,employeeName,dependantName,dependantBirthday) 
-                values('$uuid','$fullname','$dependantName','$dependantBirthday')");
-
                 if($msg)
                 {
                     echo "<script>alert('Register successfully');</script>";
@@ -51,6 +53,8 @@ include('includes/navbar.php');
                 {
                     echo "<script>alert('Error! Please Refresh the page');</script>";
                 }
+                
+                var_dump($con->query($sql));
 		}
         
 	?>
@@ -131,7 +135,7 @@ include('includes/navbar.php');
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-body wizard-content">
-                                            <form method='post' action="" enctype="multipart/form-data" class="tab-wizard wizard-circle">
+                                            <form method='post' action="empProfile.php" enctype="multipart/form-data">
 
                                                 <div class="card">
                                                     <div class="card-body shadow-lg rounded">
@@ -277,15 +281,18 @@ include('includes/navbar.php');
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody>
-                                                                            </tbody>
-                                                                            <tfoot>
                                                                                 <tr>
-                                                                                    <td><input type="text" class="form-control" id="txtName" /></td>
-                                                                                    <td><input type="date" class="form-control" id="txtBirthday" /></td>
-                                                                                    <td><input type="button" class="btn btn-info" onclick="AddDependant()" value="Add" /></td>
+                                                                                    <td><input type="text" class="form-control" name="txtName[]" id="txtName" /></td>
+                                                                                    <td><input type="date" class="form-control" name="txtBirthday[]" id="txtBirthday" /></td>
+                                                                                    <td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_row(this)'>
                                                                                 </tr>
-                                                                            </tfoot>
+                                                                            </tbody>
                                                                         </table>
+                                                                    </div>
+                                                                    <div class="form-row">
+                                                                        <div class="form-group col-md-12">
+                                                                            <button type="button" class="btn btn-info float-right" onclick="AddDependant()" value="Add" >Add</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div> 
@@ -644,39 +651,20 @@ include('includes/navbar.php');
                 AddRow(customers[i][0], customers[i][1]);
             }
         });   
-        var arrays = [];
-        function AddDependant() {
-            var name = $("#txtName").val();
-            var bday = $("#txtBirthday").val();
-            arrays.push(name,bday);
-            AddRowDependant($("#txtName").val(), $("#txtBirthday").val());
-            console.log(arrays)
-        };
-        function AddRowDependant(name, bday) {
-            var tBody = $("#example23 > TBODY")[0];
-            row = tBody.insertRow(-1);
-            var cell = $(row.insertCell(-1));
-            cell.html(name);
-            cell = $(row.insertCell(-1));
-            cell.html(bday);
-            cell = $(row.insertCell(-1));
-            var btnRemove = $("<input />");
-            btnRemove.attr("class", "btn btn-danger");
-            btnRemove.attr("type", "button");
-            btnRemove.attr("onclick", "RemoveDependant(this);");
-            btnRemove.val("Remove");
-            cell.append(btnRemove);
-        };
-        function RemoveDependant(button) {
-            var row = $(button).closest("TR");
-            var name = $("TD", row).eq(0).html();
-            var bday = $("TD", row).eq(1).html();
-            if (confirm("Do you want to delete: " + name)) {
-                var table = $("#example23")[0];
-                table.deleteRow(row[0].rowIndex);
-                // arrays.splice(name,bday);
+        function AddDependant(){
+            var tr=document.createElement("tr");
+            tr.innerHTML="<td><input type='text' class='form-control' name='txtName[]' id='txtName' /></td><td><input type='date' class='form-control' name='txtBirthday[]' id='txtBirthday' /></td><td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_row(this)'></td>";
+            document.getElementById("example23").appendChild(tr);
+        }
+        function remove_row(e){
+            var n=document.querySelector("#example23").querySelectorAll("tr").length;
+            if(n>1&&confirm("Are You Sure You Want To Delete?")==true)
+            {
+                var ele=e.parentNode.parentNode;
+                ele.remove();
             }
-        };
+        }
+
         function AddSchool() {
             AddRowSchool($("#txtSchoolName").val(), $("#txtSchoolAddress").val(), $("#txtDegree").val(), $("#txtYearGraduated").val());
             $("#txtSchoolName").val("");
@@ -711,6 +699,7 @@ include('includes/navbar.php');
                 table.deleteRow(row[0].rowIndex);
             }
         };
+
         function AddWork() {
             AddRowWork($("#txtWorkName").val(), $("#txtWorkDatefrom").val(), $("#txtWorkDateto").val(), $("#txtNatureWork").val(), $("#txtSalary1").val(), $("#txtSalary2").val(), $("#txtReason").val());
             $("#txtWorkName").val("");
@@ -750,6 +739,7 @@ include('includes/navbar.php');
                 table.deleteRow(row[0].rowIndex);
             }
         };
+
         function generateUUID() {
 			var d = new Date().getTime();
 			var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
