@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 14, 2021 at 09:27 AM
+-- Generation Time: Aug 24, 2021 at 01:40 PM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.3.27
 
@@ -35,6 +35,15 @@ CREATE TABLE `employeee_dependant` (
   `dependantBirthday` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `employeee_dependant`
+--
+
+INSERT INTO `employeee_dependant` (`id`, `uuid`, `employeeName`, `dependantName`, `dependantBirthday`) VALUES
+(32, '7441496e-ee8f-4612-aeb9-be24f62cfee4', 'MarvinGabaynoApolinar', 'Juan Dela Cruz', '2021-08-01'),
+(33, '7441496e-ee8f-4612-aeb9-be24f62cfee4', 'MarvinGabaynoApolinar', 'Sample 1', '2021-08-18'),
+(34, '7441496e-ee8f-4612-aeb9-be24f62cfee4', 'MarvinGabaynoApolinar', 'asd', '2021-08-19');
+
 -- --------------------------------------------------------
 
 --
@@ -56,11 +65,19 @@ CREATE TABLE `employee_arinfo` (
 CREATE TABLE `employee_einfo` (
   `id` int(11) NOT NULL,
   `uuid` varchar(150) NOT NULL,
+  `fullname` varchar(150) NOT NULL,
   `schoolname` varchar(200) NOT NULL,
   `address` varchar(300) NOT NULL,
   `degree` varchar(20) NOT NULL,
   `yeargraduated` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `employee_einfo`
+--
+
+INSERT INTO `employee_einfo` (`id`, `uuid`, `fullname`, `schoolname`, `address`, `degree`, `yeargraduated`) VALUES
+(4, '7441496e-ee8f-4612-aeb9-be24f62cfee4', 'MarvinGabaynoApolinar', 'Sacred Heart Academy', 'Santa Maria, Bulacan', 'Secondary', 2014);
 
 -- --------------------------------------------------------
 
@@ -108,6 +125,13 @@ CREATE TABLE `employee_pinfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `employee_pinfo`
+--
+
+INSERT INTO `employee_pinfo` (`id`, `lname`, `fname`, `mname`, `position`, `birthday`, `birthplace`, `citizenship`, `sex`, `contactno`, `civilstatus`, `address`, `sssno`, `pagibigno`, `tinno`, `philhealthno`, `nameofhusband`, `occupationofhusband`, `nameofwife`, `occupationofwife`, `filename`, `uuid`) VALUES
+(48, 'Apolinar', 'Marvin', 'Gabayno', 'Software Developer', '2021-08-01', 'Santa Cruz, San', 'Filipino', 'MALE', '09212164686', 'SINGLE', 'Santa Cruz, Santa Maria, Bulacan', '1231-21312-23', '1231-21312-23', '1231-21312-23', '1231-21312-23', '', '', '', '', 'MarvinGabaynoApolinar_7441496e-ee8f-4612-aeb9-be24f62cfee4_profile.png', '7441496e-ee8f-4612-aeb9-be24f62cfee4');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -115,6 +139,12 @@ CREATE TABLE `employee_pinfo` (
 -- Indexes for table `employeee_dependant`
 --
 ALTER TABLE `employeee_dependant`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `employee_einfo`
+--
+ALTER TABLE `employee_einfo`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -131,13 +161,19 @@ ALTER TABLE `employee_pinfo`
 -- AUTO_INCREMENT for table `employeee_dependant`
 --
 ALTER TABLE `employeee_dependant`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+
+--
+-- AUTO_INCREMENT for table `employee_einfo`
+--
+ALTER TABLE `employee_einfo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `employee_pinfo`
 --
 ALTER TABLE `employee_pinfo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

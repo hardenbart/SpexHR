@@ -7,6 +7,16 @@ include('includes/navbar.php');
 		// Register user
 		if(isset($_POST['btnsignup']))
         {
+                $depName=$_POST['txtName'];
+                $depBday=$_POST['txtBirthday'];
+                $dependanstDetails = array();
+
+                $schoolName = $_POST['txtSchoolName'];
+                $schoolAddress = $_POST['txtSchoolAddress'];
+                $schoolDegree = $_POST['txtDegree'];
+                $yearGraduated = $_POST['txtYearGraduated'];
+                $schoolDetails = array();
+
                 $fname = trim($_POST['fname']);
                 $mname = trim($_POST['mname']);
                 $lname = trim($_POST['lname']);
@@ -35,26 +45,43 @@ include('includes/navbar.php');
                 $folder = "pictures/".$filename;
                 move_uploaded_file($tempname, $folder);
 
-                $sql = "insert into employeee_dependant(uuid,employeeName,dependantName,dependantBirthday) values";
-                $rows=[];
-                for($i = 0; $i < count($_POST["txtName"]); $i++){
-                    $rows[]="('{$uuid}','{$fullnamedependant}',{$_POST["txtName"][$i]}','{$_POST["txtBirthday"][$i]}')";
+                
+                for($i = 0; $i < count($depName); $i++){
+                    $query = "('".$uuid."','". $fullname ."','" .$depName[$i]. "','" .$depBday[$i]."')";
+                    array_push($dependanstDetails, $query);
                 }
-                $sql.=implode(",",$rows);
-                $con->query($sql);
 
-                $msg=mysqli_query($con,"insert into employee_pinfo(fname,mname,lname,position,birthday,birthplace,citizenship,sex,contactno,civilstatus,address,sssno,pagibigno,tinno,philhealthno,nameofhusband,occupationofhusband,nameofwife,occupationofwife,filename,uuid) 
-                values('$fname','$mname','$lname','$position','$birthday','$birthplace','$citizenship','$sex','$contactno','$civilstatus','$address','$sssno','$pagibigno','$tinno','$philhealthno','$nameofhusband','$occupationofhusband','$nameofwife','$occupationofwife','$filename','$uuid')");
-                if($msg)
-                {
-                    echo "<script>alert('Register successfully');</script>";
+                for($s = 0; $s < count($schoolName); $s++){
+                    $query = "('".$uuid."','". $fullname ."','" .$schoolName[$s]. "','" .$schoolAddress[$s]."','" .$schoolDegree[$s]."','" .$yearGraduated[$s]."')";
+                    array_push($schoolDetails, $query);
                 }
-                else
-                {
+                mysqli_begin_transaction($con);
+
+                try{
+                    $dependantsValue = join(",", $dependanstDetails);
+                    $insertDepQuery = "insert into employeee_dependant(uuid,employeeName,dependantName,dependantBirthday) values ".$dependantsValue. ";";
+                    $insertDep = mysqli_query($con,$insertDepQuery);
+
+                    $schoolValue = join(",", $schoolDetails);
+                    echo "<script>alert(".$schoolValue.")</script>";
+                    $insertSchoolQuery = "insert into employee_einfo(uuid,fullname,schoolname,address,degree,yeargraduated) values ".$schoolValue. ";";
+                    $insertSchool = mysqli_query($con,$insertSchoolQuery);
+
+                    $msg=mysqli_query($con,"insert into employee_pinfo(fname,mname,lname,position,birthday,birthplace,citizenship,sex,contactno,civilstatus,address,sssno,pagibigno,tinno,philhealthno,nameofhusband,occupationofhusband,nameofwife,occupationofwife,filename,uuid) 
+                    values('$fname','$mname','$lname','$position','$birthday','$birthplace','$citizenship','$sex','$contactno','$civilstatus','$address','$sssno','$pagibigno','$tinno','$philhealthno','$nameofhusband','$occupationofhusband','$nameofwife','$occupationofwife','$filename','$uuid')");
+
+                    if($insertDep && $msg && $insertSchool){
+                        mysqli_commit($con);
+                        echo "<script>alert('Register successfully');</script>";
+                    }
+                    else{
+                        mysqli_rollback($con);
+                    }
+                }
+                catch(mysqli_sql_exception $exception){
+                    mysqli_rollback($mysqli);
                     echo "<script>alert('Error! Please Refresh the page');</script>";
                 }
-                
-                var_dump($con->query($sql));
 		}
         
 	?>
@@ -136,7 +163,6 @@ include('includes/navbar.php');
                                     <div class="card">
                                         <div class="card-body wizard-content">
                                             <form method='post' action="empProfile.php" enctype="multipart/form-data">
-
                                                 <div class="card">
                                                     <div class="card-body shadow-lg rounded">
                                                     <h5 class="card-title">Personal Info</h5>
@@ -302,42 +328,10 @@ include('includes/navbar.php');
                                                 <div class="card">
                                                     <div class="card-body shadow-lg rounded">
                                                         <h5 class="card-title">Scholastic Records</h5>
-                                                        <div class="form-row">
-                                                            <div class="col-md-4">
-                                                            <label>School Name</label>
-                                                            <input type="text" class="form-control" id="txtSchoolName">
-                                                            </div>
-                                                            <div class="form-group col-md-4">
-                                                            <label>Address</label>
-                                                            <input type="text" class="form-control" id="txtSchoolAddress">
-                                                            </div>
-                                                            <div class="form-group col-md-2">
-                                                                <label>Degree</label>
-                                                                <select class="form-control" id="txtDegree">
-                                                                    <option>Primary</option>
-                                                                    <option>Secondary</option>
-                                                                    <option>Associate's degree</option>
-                                                                    <option>Bachelor's degree</option>
-                                                                    <option>Master's degree</option>
-                                                                    <option>Doctoral degree</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group col-md-2">
-                                                            <label>Year Graduated</label>
-                                                            <input type="text" class="form-control" id="txtYearGraduated">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-row">
-                                                            <div class="form-group col-md-12">
-                                                                <button type="button" class="btn btn-info float-right" onclick="AddSchool()" value="AddSchool" >Add</button>
-                                                            </div>
-                                                        </div>
                                                         <div class="row">
                                                             <div class="col-12">
                                                                 <div class="table-responsive">
-                                                                    <table id="exampleschool"
-                                                                        class="font-weight-bold text-center display nowrap table table-hover table-striped table-bordered"
-                                                                        cellspacing="0" width="100%">
+                                                                    <table id="exampleschool" class="font-weight-bold text-center display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                                                                         <thead>
                                                                             <tr>
                                                                                 <th>School Name</th>
@@ -348,9 +342,30 @@ include('includes/navbar.php');
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
+                                                                             <tr>
+                                                                                <td><input type="text" class="form-control" id="txtSchoolName" name="txtSchoolName[]"/></td>
+                                                                                <td><input type="text" class="form-control" id="txtSchoolAddress" name="txtSchoolAddress[]"/></td>
+                                                                                <td>
+                                                                                    <select class="form-control" id="txtDegree" name="txtDegree[]">
+                                                                                        <option>Primary</option>
+                                                                                        <option>Secondary</option>
+                                                                                        <option>Associate's degree</option>
+                                                                                        <option>Bachelor's degree</option>
+                                                                                        <option>Master's degree</option>
+                                                                                        <option>Doctoral degree</option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td><input type="text" class="form-control" id="txtYearGraduated" name="txtYearGraduated[]"/></td>
+                                                                                <td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_row(this)'></td>
+                                                                            </tr>
                                                                         </tbody>
                                                                     </table>
                                                                 </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-12">
+                                                                <button type="button" class="btn btn-info float-right" onclick="AddSchool()" value="AddSchool" >Add</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -409,63 +424,40 @@ include('includes/navbar.php');
                                                         <h5 class="card-title">Work Experience</h5>
                                                         <div class="form-row mt-1">
                                                             <div class="col-md-12">
-                                                            <div class="form-row">
-                                                                <div class="col-md-5">
-                                                                    <label>Name and Address of Employer</label>
-                                                                    <input type="text" class="form-control" id="txtWorkName">
-                                                                </div>
-                                                                <div class="form-group col-md-2">
-                                                                    <label>Date From</label>
-                                                                    <input type="date" class="form-control" id="txtWorkDatefrom">
-                                                                </div>
-                                                                <div class="form-group col-md-2">
-                                                                    <label>Date To</label>
-                                                                    <input type="date" class="form-control" id="txtWorkDateto">
-                                                                </div>
-                                                                <div class="form-group col-md-3">
-                                                                    <label>Nature of your work</label>
-                                                                    <input type="text" class="form-control" id="txtNatureWork">
-                                                                </div>
-                                                                <div class="form-group col-md-3">
-                                                                    <label>Monthly Salary At Employment</label>
-                                                                    <input type="text" class="form-control" id="txtSalary1">
-                                                                </div>
-                                                                <div class="form-group col-md-3">
-                                                                    <label>Monthly Salary At Leaving</label>
-                                                                    <input type="text" class="form-control" id="txtSalary2">
-                                                                </div>
-                                                                <div class="form-group col-md-6">
-                                                                    <label>Reason for Leaving</label>
-                                                                    <input type="text" class="form-control" id="txtReason">
-                                                                </div>
-                                                            </div>
-                                                        <div class="form-row">
-                                                            <div class="form-group col-md-12">
-                                                                <button type="button" class="btn btn-info float-right" onclick="AddWork()" value="AddWork" >Add</button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <div class="table-responsive">
-                                                                    <table id="examplework"
-                                                                        class="font-weight-bold text-center display nowrap table table-hover table-striped table-bordered"
-                                                                        cellspacing="0" width="100%">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Name and Address of Employer</th>
-                                                                                <th>Date Range</th>
-                                                                                <th>Nature of your work</th>
-                                                                                <th>Monthly Salary Before & After</th>
-                                                                                <th>Reason for Leaving</th>
-                                                                                <th>Action</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                        </tbody>
-                                                                    </table>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="table-responsive">
+                                                                        <table id="examplework" class="font-weight-bold text-center display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th>Name and Address of Employer</th>
+                                                                                    <th colspan="2">Date Range</th>
+                                                                                    <th>Nature of your work</th>
+                                                                                    <th colspan="2">Monthly Salary Before & After</th>
+                                                                                    <th>Reason for Leaving</th>
+                                                                                    <th>Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td><input type="text" class="form-control" id="txtWorkName" name="txtWorkName[]"></td>
+                                                                                    <td><input type="date" id="txtWorkDatefrom" name="txtWorkDatefrom[]"></td><td><input type="date" id="txtWorkDateto" name="txtWorkDateto[]"></td>
+                                                                                    <td><input type="text" class="form-control" id="txtNatureWork" name="txtNatureWork[]"></td>
+                                                                                    <td><input type="text" class="form-control" id="txtSalary1" name="txtSalary1[]"></td>
+                                                                                    <td><input type="text" class="form-control" id="txtSalary2" name="txtSalary2[]"></td>
+                                                                                    <td><input type="text" class="form-control" id="txtReason" id="txtReason[]"></td>
+                                                                                    <td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_row(this)'></td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                            <div class="form-row mt-2">
+                                                                <div class="form-group col-md-12">
+                                                                    <button type="button" class="btn btn-info float-right" onclick="AddWork()" value="AddWork" >Add</button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -665,80 +657,33 @@ include('includes/navbar.php');
             }
         }
 
-        function AddSchool() {
-            AddRowSchool($("#txtSchoolName").val(), $("#txtSchoolAddress").val(), $("#txtDegree").val(), $("#txtYearGraduated").val());
-            $("#txtSchoolName").val("");
-            $("#txtSchoolAddress").val("");
-            $("#txtDegree").val("");
-            $("#txtYearGraduated").val("");
-        };
-        function AddRowSchool(name, address, degree, year) {
-            var tBody = $("#exampleschool > TBODY")[0];
-            row = tBody.insertRow(-1);
-            var cell = $(row.insertCell(-1));
-            cell.html(name);
-            cell = $(row.insertCell(-1));
-            cell.html(address);
-            cell = $(row.insertCell(-1));
-            cell.html(degree);
-            cell = $(row.insertCell(-1));
-            cell.html(year);
-            cell = $(row.insertCell(-1));
-            var btnRemove = $("<input />");
-            btnRemove.attr("class", "btn btn-danger");
-            btnRemove.attr("type", "button");
-            btnRemove.attr("onclick", "RemoveSchool(this);");
-            btnRemove.val("Remove");
-            cell.append(btnRemove);
-        };
-        function RemoveSchool(button) {
-            var row = $(button).closest("TR");
-            var name = $("TD", row).eq(0).html();
-            if (confirm("Do you want to delete: " + name)) {
-                var table = $("#exampleschool")[0];
-                table.deleteRow(row[0].rowIndex);
+        function AddSchool(){
+            var tr=document.createElement("tr");
+            tr.innerHTML="<td><input type='text' class='form-control' id='txtSchoolName' name='txtSchoolName[]'/></td><td><input type='text' class='form-control' id='txtSchoolAddress' name='txtSchoolAddress[]'/></td> <td><select class='form-control' id='txtDegree' name='txtDegree[]'> <option>Primary</option><option>Secondary</option><option>Associate's degree</option><option>Bachelor's degree</option><option>Master's degree</option><option>Doctoral degree</option></select></td><td><input type='text' class='form-control' id='txtYearGraduated' name='txtYearGraduated[]'/></td><td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_School(this)'></td>";
+            document.getElementById("exampleschool").appendChild(tr);
+        }
+        function remove_School(e){
+            var n=document.querySelector("#exampleschool").querySelectorAll("tr").length;
+            if(n>1&&confirm("Are You Sure You Want To Delete?")==true)
+            {
+                var ele=e.parentNode.parentNode;
+                ele.remove();
             }
-        };
+        }
 
-        function AddWork() {
-            AddRowWork($("#txtWorkName").val(), $("#txtWorkDatefrom").val(), $("#txtWorkDateto").val(), $("#txtNatureWork").val(), $("#txtSalary1").val(), $("#txtSalary2").val(), $("#txtReason").val());
-            $("#txtWorkName").val("");
-            $("#txtWorkDatefrom").val("");
-            $("#txtWorkDateto").val("");
-            $("#txtNatureWork").val("");
-            $("#txtSalary1").val("");
-            $("#txtSalary2").val("");
-            $("#txtReason").val("");
-        };
-        function AddRowWork(name, datefrom, dateto, nature, salary1,salary2,reason) {
-            var tBody = $("#examplework > TBODY")[0];
-            row = tBody.insertRow(-1);
-            var cell = $(row.insertCell(-1));
-            cell.html(name);
-            cell = $(row.insertCell(-1));
-            cell.html("From " + datefrom + "<br/> To " + dateto);
-            cell = $(row.insertCell(-1));
-            cell.html(nature);
-            cell = $(row.insertCell(-1));
-            cell.html("At employment " + salary1 + "<br/> At leaving " + salary2);
-            cell = $(row.insertCell(-1));
-            cell.html(reason);
-            cell = $(row.insertCell(-1));
-            var btnRemove = $("<input />");
-            btnRemove.attr("class", "btn btn-danger");
-            btnRemove.attr("type", "button");
-            btnRemove.attr("onclick", "RemoveWork(this);");
-            btnRemove.val("Remove");
-            cell.append(btnRemove);
-        };
-        function RemoveWork(button) {
-            var row = $(button).closest("TR");
-            var name = $("TD", row).eq(0).html();
-            if (confirm("Do you want to delete: " + name)) {
-                var table = $("#examplework")[0];
-                table.deleteRow(row[0].rowIndex);
+        function AddWork(){
+            var tr=document.createElement("tr");
+            tr.innerHTML="<td><input type='text' class='form-control' id='txtWorkName' name='txtWorkName[]'></td><td><input type='date' id='txtWorkDatefrom' name='txtWorkDatefrom[]'></td><td><input type='date' id='txtWorkDateto' name='txtWorkDateto[]'></td><td><input type='text' class='form-control' id='txtNatureWork' name='txtNatureWork[]'></td><td><input type='text' class='form-control' id='txtSalary1' name='txtSalary1[]'></td><td><input type='text' class='form-control' id='txtSalary2' name='txtSalary2[]'></td><td><input type='text' class='form-control' id='txtReason' id='txtReason[]'></td><td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_Work(this)'></td>";
+            document.getElementById("examplework").appendChild(tr);
+        }
+        function remove_Work(e){
+            var n=document.querySelector("#examplework").querySelectorAll("tr").length;
+            if(n>1&&confirm("Are You Sure You Want To Delete?")==true)
+            {
+                var ele=e.parentNode.parentNode;
+                ele.remove();
             }
-        };
+        }
 
         function generateUUID() {
 			var d = new Date().getTime();
