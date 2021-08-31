@@ -7,16 +7,26 @@ include('includes/navbar.php');
 		// Register user
 		if(isset($_POST['btnsignup']))
         {
+            //dependent
                 $depName=$_POST['txtName'];
                 $depBday=$_POST['txtBirthday'];
                 $dependanstDetails = array();
-
+            //school
                 $schoolName = $_POST['txtSchoolName'];
                 $schoolAddress = $_POST['txtSchoolAddress'];
                 $schoolDegree = $_POST['txtDegree'];
                 $yearGraduated = $_POST['txtYearGraduated'];
                 $schoolDetails = array();
-
+            //work
+                $txtWorkName = $_POST['txtWorkName'];
+                $txtWorkDatefrom = $_POST['txtWorkDatefrom'];
+                $txtWorkDateto = $_POST['txtWorkDateto'];
+                $txtNatureWork = $_POST['txtNatureWork'];
+                $txtSalary1 = $_POST['txtSalary1']; 
+                $txtSalary2 = $_POST['txtSalary2'];
+                $txtReason1 = $_POST['txtReason1'];
+                $workDetails = array();
+            //personal info
                 $fname = trim($_POST['fname']);
                 $mname = trim($_POST['mname']);
                 $lname = trim($_POST['lname']);
@@ -38,13 +48,21 @@ include('includes/navbar.php');
                 $occupationofwife = $_POST['occupationofwife'];
                 $fullname = $fname . $mname . $lname;
                 $fullnamedependant = $fname ." ". $mname ." ". $lname;
+            //med    
                 $uuid = $_POST['uuid'];
+                $txtmed1 = $_POST['txtmed1'];
+                $txtmed2 = $_POST['txtmed2'];
+                $checkbox1 = $_POST['s6'];  
+                $chk="";  
+                foreach($checkbox1 as $chk1)  
+                {  
+                    $chk .= $chk1.",";  
+                }
 
                 $filename = $fullname ."_". $uuid . "_" . $_FILES["uploadfile"]["name"];
                 $tempname = $_FILES["uploadfile"]["tmp_name"]; 
                 $folder = "pictures/".$filename;
                 move_uploaded_file($tempname, $folder);
-
                 
                 for($i = 0; $i < count($depName); $i++){
                     $query = "('".$uuid."','". $fullname ."','" .$depName[$i]. "','" .$depBday[$i]."')";
@@ -55,6 +73,12 @@ include('includes/navbar.php');
                     $query = "('".$uuid."','". $fullname ."','" .$schoolName[$s]. "','" .$schoolAddress[$s]."','" .$schoolDegree[$s]."','" .$yearGraduated[$s]."')";
                     array_push($schoolDetails, $query);
                 }
+
+                for($w = 0; $w < count($txtWorkName); $w++){
+                    $query = "('".$uuid."','". $txtWorkName[$w] ."','" .$txtWorkDatefrom[$w]. "','" .$txtWorkDateto[$w]."','" .$txtNatureWork[$w]."','" .$txtSalary1[$w]."','" .$txtSalary2[$w]."','" .$txtReason1[$w]."')";
+                    array_push($workDetails, $query);
+                }
+                
                 mysqli_begin_transaction($con);
 
                 try{
@@ -63,14 +87,20 @@ include('includes/navbar.php');
                     $insertDep = mysqli_query($con,$insertDepQuery);
 
                     $schoolValue = join(",", $schoolDetails);
-                    echo "<script>alert(".$schoolValue.")</script>";
                     $insertSchoolQuery = "insert into employee_einfo(uuid,fullname,schoolname,address,degree,yeargraduated) values ".$schoolValue. ";";
                     $insertSchool = mysqli_query($con,$insertSchoolQuery);
 
                     $msg=mysqli_query($con,"insert into employee_pinfo(fname,mname,lname,position,birthday,birthplace,citizenship,sex,contactno,civilstatus,address,sssno,pagibigno,tinno,philhealthno,nameofhusband,occupationofhusband,nameofwife,occupationofwife,filename,uuid) 
                     values('$fname','$mname','$lname','$position','$birthday','$birthplace','$citizenship','$sex','$contactno','$civilstatus','$address','$sssno','$pagibigno','$tinno','$philhealthno','$nameofhusband','$occupationofhusband','$nameofwife','$occupationofwife','$filename','$uuid')");
 
-                    if($insertDep && $msg && $insertSchool){
+                    $msg1=mysqli_query($con,"insert into employee_minfo(uuid,m1,m2,s1) 
+                    values('$uuid','$txtmed1','$txtmed2','$chk')");
+
+                    $workValue = join(",", $workDetails);
+                    $insertWorkQuery = "insert into employee_winfo(uuid,workname,datefrom,dateto,natureofwork,salary1,salary2,txtReason1) values ".$workValue. ";";
+                    $insertWork = mysqli_query($con,$insertWorkQuery);
+
+                    if($insertDep && $msg && $insertSchool && $msg1 && $insertWork){
                         mysqli_commit($con);
                         echo "<script>alert('Register successfully');</script>";
                     }
@@ -377,13 +407,13 @@ include('includes/navbar.php');
                                                         <div class="form-row mt-1">
                                                             <div class="col-md-12">
                                                             <label>Do you have any present or past medical history which will present special consideration as to job assignments? If so, indicate the condition...</label>
-                                                            <input type="text" class="form-control" id="txtmed1">
+                                                            <input type="text" class="form-control" id="txtmed1" name="txtmed1">
                                                             </div>
                                                         </div>
                                                         <div class="form-row mt-1">
                                                             <div class="col-md-12">
                                                             <label>Have you had any illnesses, hospitalization, or accidents in the past two years? If yes, please explain…..</label>
-                                                            <input type="text" class="form-control" id="txtmed2">
+                                                            <input type="text" class="form-control" id="txtmed2" name="txtmed2">
                                                             </div>
                                                         </div>
                                                         <div class="form-row mt-1">
@@ -445,7 +475,7 @@ include('includes/navbar.php');
                                                                                     <td><input type="text" class="form-control" id="txtNatureWork" name="txtNatureWork[]"></td>
                                                                                     <td><input type="text" class="form-control" id="txtSalary1" name="txtSalary1[]"></td>
                                                                                     <td><input type="text" class="form-control" id="txtSalary2" name="txtSalary2[]"></td>
-                                                                                    <td><input type="text" class="form-control" id="txtReason" id="txtReason[]"></td>
+                                                                                    <td><input type="text" class="form-control" id="txtReason1" name="txtReason1[]"></td>
                                                                                     <td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_row(this)'></td>
                                                                                 </tr>
                                                                             </tbody>
@@ -673,7 +703,7 @@ include('includes/navbar.php');
 
         function AddWork(){
             var tr=document.createElement("tr");
-            tr.innerHTML="<td><input type='text' class='form-control' id='txtWorkName' name='txtWorkName[]'></td><td><input type='date' id='txtWorkDatefrom' name='txtWorkDatefrom[]'></td><td><input type='date' id='txtWorkDateto' name='txtWorkDateto[]'></td><td><input type='text' class='form-control' id='txtNatureWork' name='txtNatureWork[]'></td><td><input type='text' class='form-control' id='txtSalary1' name='txtSalary1[]'></td><td><input type='text' class='form-control' id='txtSalary2' name='txtSalary2[]'></td><td><input type='text' class='form-control' id='txtReason' id='txtReason[]'></td><td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_Work(this)'></td>";
+            tr.innerHTML="<td><input type='text' class='form-control' id='txtWorkName' name='txtWorkName[]'></td><td><input type='date' id='txtWorkDatefrom' name='txtWorkDatefrom[]'></td><td><input type='date' id='txtWorkDateto' name='txtWorkDateto[]'></td><td><input type='text' class='form-control' id='txtNatureWork' name='txtNatureWork[]'></td><td><input type='text' class='form-control' id='txtSalary1' name='txtSalary1[]'></td><td><input type='text' class='form-control' id='txtSalary2' name='txtSalary2[]'></td><td><input type='text' class='form-control' id='txtReason1' name='txtReason1[]'></td><td><input type='button' class='btn btn-danger' value='Remove' onclick='remove_Work(this)'></td>";
             document.getElementById("examplework").appendChild(tr);
         }
         function remove_Work(e){
