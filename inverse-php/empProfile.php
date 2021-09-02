@@ -58,6 +58,15 @@ include('includes/navbar.php');
                 {  
                     $chk .= $chk1.",";  
                 }
+            //general info    
+                $g1 = $_POST['g1'];
+                $g2 = $_POST['g2'];
+                $g3 = $_POST['g3'];
+                $g4 = $_POST['g4']; 
+                $g5 = $_POST['g5'];
+                $g6 = $_POST['g6'];
+                $g7 = $_POST['g7'];
+                $g8 = $_POST['g8'];   
 
                 $filename = $fullname ."_". $uuid . "_" . $_FILES["uploadfile"]["name"];
                 $tempname = $_FILES["uploadfile"]["tmp_name"]; 
@@ -100,7 +109,10 @@ include('includes/navbar.php');
                     $insertWorkQuery = "insert into employee_winfo(uuid,workname,datefrom,dateto,natureofwork,salary1,salary2,txtReason1) values ".$workValue. ";";
                     $insertWork = mysqli_query($con,$insertWorkQuery);
 
-                    if($insertDep && $msg && $insertSchool && $msg1 && $insertWork){
+                    $msg2=mysqli_query($con,"insert into employee_ginfo(uuid,g1,g2,g3,g4,g5,g6,g7,g8) 
+                    values('$uuid','$g1','$g2','$g3','$g4','$g5','$g6','$g7','$g8')");
+
+                    if($insertDep && $msg && $insertSchool && $msg1 && $insertWork && $msg2){
                         mysqli_commit($con);
                         echo "<script>alert('Register successfully');</script>";
                     }
@@ -113,7 +125,6 @@ include('includes/navbar.php');
                     echo "<script>alert('Error! Please Refresh the page');</script>";
                 }
 		}
-        
 	?>
         <div class="page-wrapper">
             <div class="container-fluid">
@@ -494,37 +505,37 @@ include('includes/navbar.php');
                                                 
                                                 <div class="card mt-3">
                                                     <div class="card-body shadow-lg rounded">
-                                                        <h5 class="card-title">General Information</h5>
+                                                        <h5 class="card-title">General Information (Leave as Empty if you don't have)</h5>
                                                             <div class="form-row mt-1">
                                                                 <div class="col-md-4">
                                                                     <label>Approximate monthly minimum salary desired</label>
-                                                                    <input type="text" class="form-control" id="txtmed1">
+                                                                    <input type="text" class="form-control" id="g1" name="g1">
                                                                 </div>
                                                                 <div class="col-md-4">
                                                                     <label>Have you employed in Manufacturing firm Before?</label>
-                                                                    <input type="text" class="form-control" id="txtmed1">
+                                                                    <input type="text" class="form-control" id="g2" name="g2">
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <label>Where?</label>
-                                                                    <input type="text" class="form-control" id="txtmed1">
+                                                                    <input type="text" class="form-control" id="g3" name="g3">
                                                                 </div>
                                                                 <div class="col-md-2">
                                                                     <label>When?</label>
-                                                                    <input type="text" class="form-control" id="txtmed1">
+                                                                    <input type="text" class="form-control" id="g4" name="g4">
                                                                 </div>
                                                             </div>
                                                         <div class="form-row mt-1">
                                                             <div class="col-md-4">
                                                                 <label>Kinds and grades of government examination taken</label>
-                                                                <input type="text" class="form-control" id="txtmed2">
+                                                                <input type="text" class="form-control" id="g5" name="g5">
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <label>Can you drive?</label>
-                                                                <input type="text" class="form-control" id="txtmed2">
+                                                                <input type="text" class="form-control" id="g6" name="g6">
                                                             </div>
                                                             <div class="col-md-3">
                                                                 <label>Indicate channel of application</label>
-                                                                <select id="dchoices" name="dchoices" class="form-control">
+                                                                <select id="g7" name="g7" class="form-control">
                                                                     <option value="d1">College placement office</option>
                                                                     <option value="d2">Walk-in</option>
                                                                     <option value="d3">Letter</option>
@@ -535,7 +546,7 @@ include('includes/navbar.php');
                                                             </div>
                                                             <div class="col-md-3" id="txtspecify" style="display: none;">
                                                                 <label>Specify/Name</label>
-                                                                <input type="text" class="form-control">
+                                                                <input type="text" class="form-control" id="g8" name="g8">
                                                             </div>
                                                         </div>
                                                     </div>

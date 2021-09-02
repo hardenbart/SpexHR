@@ -33,7 +33,7 @@
                                 <div class="dropdown-divider"></div>
                                 <a href="#" class="dropdown-item"><i class="ti-settings"></i>&nbsp; Account Setting</a>
                                 <div class="dropdown-divider"></div>
-                                <a href="#" class="dropdown-item"><i class="ti-close"></i>&nbsp; Logout</a>
+                                <a href="index.php" class="dropdown-item"><i class="ti-close"></i>&nbsp; Logout</a>
                             </div>
                         </div>
                     </div>
